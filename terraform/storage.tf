@@ -2,7 +2,7 @@
 resource "azurerm_storage_account" "data" {
   name                     = "st${replace(var.app_name, "-", "")}data"
   resource_group_name      = data.azurerm_resource_group.main.name
-  location                 = data.azurerm_resource_group.main.location
+  location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
@@ -10,7 +10,7 @@ resource "azurerm_storage_account" "data" {
 }
 
 resource "azurerm_storage_share" "todo_data" {
-  name               = "todo-data"
-  storage_account_id = azurerm_storage_account.data.id
-  quota              = 1 # GB - plenty for a SQLite file
+  name                 = "todo-data"
+  storage_account_name = azurerm_storage_account.data.name
+  quota                = 1 # GB - plenty for a SQLite file
 }
