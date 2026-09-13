@@ -5,17 +5,6 @@ resource "azurerm_container_app_environment" "main" {
   log_analytics_workspace_id = azurerm_log_analytics_workspace.main.id
 }
 
-# Mount the Azure Files share into the Container Apps Environment so the
-# container can write its SQLite database to a persistent location.
-resource "azurerm_container_app_environment_storage" "todo_data" {
-  name                         = "todo-data"
-  container_app_environment_id = azurerm_container_app_environment.main.id
-  account_name                 = azurerm_storage_account.data.name
-  share_name                   = azurerm_storage_share.todo_data.name
-  access_key                   = azurerm_storage_account.data.primary_access_key
-  access_mode                  = "ReadWrite"
-}
-
 resource "azurerm_container_app" "main" {
   name                         = var.app_name
   container_app_environment_id = azurerm_container_app_environment.main.id
@@ -39,21 +28,16 @@ resource "azurerm_container_app" "main" {
         value = "http://+:8080"
       }
 
+      # NOTE: SQLite lives on the container's local ephemeral disk here, not on
+      # a network share. Azure Files (SMB) does not reliably support the file
+      # locking SQLite needs for transactions ("database is locked" errors).
+      # Trade-off: data does NOT persist across restarts/redeploys/scaling
+      # events. Revisit with a managed database (e.g. PostgreSQL) if
+      # persistence across restarts becomes a requirement.
       env {
         name  = "ConnectionStrings__DefaultConnection"
         value = "Data Source=/app/data/todos.db"
       }
-
-      volume_mounts {
-        name = "todo-data"
-        path = "/app/data"
-      }
-    }
-
-    volume {
-      name         = "todo-data"
-      storage_type = "AzureFile"
-      storage_name = azurerm_container_app_environment_storage.todo_data.name
     }
 
     min_replicas = 1

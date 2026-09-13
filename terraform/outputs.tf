@@ -7,8 +7,3 @@ output "log_analytics_workspace_id" {
   description = "Log Analytics workspace ID (for querying logs/metrics)."
   value       = azurerm_log_analytics_workspace.main.id
 }
-
-output "storage_account_name" {
-  description = "Storage account holding the SQLite data file."
-  value       = azurerm_storage_account.data.name
-}
