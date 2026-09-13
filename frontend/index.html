@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Tasks</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="card">
+    <h1>My Tasks</h1>
+
+    <form id="todo-form" class="add-row">
+      <input
+        type="text"
+        id="todo-input"
+        placeholder="Add a task..."
+        autocomplete="off"
+        maxlength="200"
+        required
+      />
+      <button type="submit" aria-label="Add task">+</button>
+    </form>
+
+    <ul id="todo-list" class="todo-list">
+      <!-- Todo items are rendered here by app.js -->
+    </ul>
+
+    <p id="empty-state" class="empty-state" hidden>No tasks yet. Add one above.</p>
+    <p id="error-banner" class="error-banner" hidden></p>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

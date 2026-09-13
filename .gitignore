@@ -1,0 +1,20 @@
+# .NET
+backend/bin/
+backend/obj/
+*.user
+
+# SQLite database files
+*.db
+*.db-shm
+*.db-wal
+
+# Environment files
+.env
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# cloud secrets
+*secrets* 
